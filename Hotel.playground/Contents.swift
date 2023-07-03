@@ -33,6 +33,14 @@ struct Reservation {
     
 }
 
+// Estructura Errores de la reserva
+
+enum ReservationError {
+    case sameID
+    case sameClient
+    case noReservation
+}
+
 
 
 // Pruebas para eliminar
