@@ -24,7 +24,7 @@ struct Client {
 
 struct Reservation {
  
-    let id: Int
+    var id: Int = 0
     /**
      The ID coud be a var that add 1 every time that one reservation is made
      somthing like: var idNumber = 0 // and at the end of func addreservation
@@ -54,69 +54,20 @@ enum ReservationError: Error {
 // ------------------------------
 
 class HotelReservationManager {
-    var selection = 0
     
-    func runHotelApliccation () {
-        while true {
-           // TODO:
-        
-            readUserChoice()
-            break
-        }
-    }
-    
-    // let hotelName = "Namek"
-    
+    let hotelName = "Namek"
     var reservationList: [Any] = []
     
-    // private var reservationList: Any = [String]().self
     
-    // Añadir yo el nombre del hotel, incluso como propiedad privada
-    
-
-    }
-
-    func readUserChoice() {
-    
-        var selection = 0
-        /**
-        while selection == 0 {
-            print("Para realizar una función escriba su número correspondiente:")
-            print("1 -> Añadir una reserva")
-            print("2 -> Candelar una reserva")
-            print("3 -> Imprimir la lista de reservas")
-            print("4 -> Cerrar la aplicación")
-            
-            var selection = readLine()
-            if selection == "1" {
-                addReservation()
-            }
-        }
-         */
-}
-    
-    func addReservation() {
+    func addReservation(clients: [Client], days: Int, breakfastOption: Bool) {
         
         var newID = 0
-        let hotelFirstName = "Namek"
         
-        var addReservationList : [Any] = []
+        let newReservation = Reservation(id: newID, hotelName: hotelName, clientList: clients, stayInDays: days, price: 5, breakfast: breakfastOption)
         
-        print("Introduzca los nombres de sus clientes:")
-        let userClientList: String? = readLine()
-        print("Introduzca los días que van a permanecer:")
-        var userDays: String? = readLine()
-        //var userDays = Int(userDays)
-        print("¿Desea desayuno?")
-        let userBreakfast: String? = readLine()
+        reservationList.append(newReservation)
         
-       // Reservation(id: newID, hotelName: hotelFirstName, clientList: userClientList, stayInDays: userDays, price: 0, breakfast: true)
-        
-        //var Reservation1 = Reservation(clientList: [], stayInDays: days, price: 5.45, breakfast: true)
-        //addReservationList.append(Reservation1)
-        //clientList
-        //stayInDays
-        //breakfast
+        newID += 1
         
         // verificar que el ID es único y que no está en ninguna otra reserva (que goku no pueda hacer dos reservas)
         
@@ -128,13 +79,12 @@ class HotelReservationManager {
     }
     
     func printListOfReservations () {
-        
+        print(reservationList)
     }
+    
+}
 
 
-
-let HotelAplication = HotelReservationManager()
-HotelAplication.runHotelApliccation()
 // Pruebas para eliminar
 
 let Goku = Client(name: "Goku", age: 45, height: 1.95)
@@ -150,3 +100,6 @@ people
 //let TeamHuman = Reservation(clientList: id: 0, hotelName: "Konoha", ["Goku","Vegetta","Piccolo"], stayInDays: 5, price: 25.50, breakfast: true)
 let TeamHuman2 = Reservation(id: 1, hotelName: "Konoha", clientList: [Goku, Vegeta], stayInDays: 5, price: 5.25, breakfast: true)
 TeamHuman2
+
+HotelReservationManager().addReservation(clients: [Goku, Vegeta], days:5, breakfastOption:true)
+HotelReservationManager().printListOfReservations()
