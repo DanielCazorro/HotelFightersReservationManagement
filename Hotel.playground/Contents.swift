@@ -12,7 +12,7 @@ import Foundation
 
 // Estructura Cliente
 
-struct Client: Equatable, Hashable {
+struct Client {
     
     let name: String
     let age: Int
@@ -24,12 +24,17 @@ struct Client: Equatable, Hashable {
 
 struct Reservation {
  
-    let id: Int = 0
-    // The ID coud be a var that add 1 every time that one reservation is made
-    // somthing like: var idNumber = 0 // and at the end of func addreservation
-    // idNumber += 1
-    let hotelName: String = "Namek"
-    let clientList: Array<Any>
+    let id: Int
+    /**
+     The ID coud be a var that add 1 every time that one reservation is made
+     somthing like: var idNumber = 0 // and at the end of func addreservation
+     idNumber += 1
+     */
+    let hotelName: String
+    /**
+    Maybe we can set here the hotel name. If not, try to set it down, where we change id
+     */
+    let clientList: [Client]
     let stayInDays: Int
     let price: Double
     let breakfast: Bool
@@ -56,6 +61,7 @@ class HotelReservationManager {
            // TODO:
         
             readUserChoice()
+            break
         }
     }
     
@@ -73,7 +79,7 @@ class HotelReservationManager {
     func readUserChoice() {
     
         var selection = 0
-        
+        /**
         while selection == 0 {
             print("Para realizar una función escriba su número correspondiente:")
             print("1 -> Añadir una reserva")
@@ -82,17 +88,32 @@ class HotelReservationManager {
             print("4 -> Cerrar la aplicación")
             
             var selection = readLine()
-            if selection == "4" {
-                break
+            if selection == "1" {
+                addReservation()
             }
         }
+         */
 }
     
     func addReservation() {
         
-        // var addReservationList : [Any] = []
+        var newID = 0
+        let hotelFirstName = "Namek"
         
+        var addReservationList : [Any] = []
         
+        print("Introduzca los nombres de sus clientes:")
+        let userClientList: String? = readLine()
+        print("Introduzca los días que van a permanecer:")
+        var userDays: String? = readLine()
+        //var userDays = Int(userDays)
+        print("¿Desea desayuno?")
+        let userBreakfast: String? = readLine()
+        
+       // Reservation(id: newID, hotelName: hotelFirstName, clientList: userClientList, stayInDays: userDays, price: 0, breakfast: true)
+        
+        //var Reservation1 = Reservation(clientList: [], stayInDays: days, price: 5.45, breakfast: true)
+        //addReservationList.append(Reservation1)
         //clientList
         //stayInDays
         //breakfast
@@ -126,6 +147,6 @@ people.append(Goku)
 people.append(Vegeta)
 people
 
-let TeamHuman = Reservation(clientList: ["Goku","Vegetta","Piccolo"], stayInDays: 5, price: 25.50, breakfast: true)
-
-TeamHuman
+//let TeamHuman = Reservation(clientList: id: 0, hotelName: "Konoha", ["Goku","Vegetta","Piccolo"], stayInDays: 5, price: 25.50, breakfast: true)
+let TeamHuman2 = Reservation(id: 1, hotelName: "Konoha", clientList: [Goku, Vegeta], stayInDays: 5, price: 5.25, breakfast: true)
+TeamHuman2
