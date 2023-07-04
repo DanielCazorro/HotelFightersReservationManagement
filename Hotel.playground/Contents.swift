@@ -30,7 +30,7 @@ struct Reservation {
      somthing like: var idNumber = 0 // and at the end of func addreservation
      idNumber += 1
      */
-    let hotelName: String
+    let hotelName: String = "Namek"
     /**
     Maybe we can set here the hotel name. If not, try to set it down, where we change id
      */
@@ -59,13 +59,12 @@ class HotelReservationManager {
     var reservationList: [Any] = []
     
     
-    func addReservation(clients: [Client], days: Int, breakfastOption: Bool) {
+    func addReservation(Reservation: Reservation) {
         
         var newID = 0
         
-        let newReservation = Reservation(id: newID, hotelName: hotelName, clientList: clients, stayInDays: days, price: 5, breakfast: breakfastOption)
-        
-        reservationList.append(newReservation)
+        reservationList.append(Reservation)
+        print(reservationList)
         
         newID += 1
         
@@ -74,7 +73,9 @@ class HotelReservationManager {
         //cálculo de precioa
     }
     
-    func cancelReservation() {
+    func cancelReservation(Reservation: Reservation) {
+        
+        reservationList.remove(at: Reservation.id)
         
     }
     
@@ -84,6 +85,24 @@ class HotelReservationManager {
     
 }
 
+// Testing
+
+func testAddReservation() {
+    // Verifica errores al añadir reservas duplicadas (por ID o si otro cliente ya está en alguna otra reserva) y que nuevas reservas sean añadidas correctamente.
+    
+    assert(HotelReservationManager().reservationList.count == 0)
+}
+
+// Ejecutamos el test
+testAddReservation()
+
+func testCancelReservation() {
+    // Verifica que las reservas se cancelen correctamente (borrándose del listado) y que cancelar una reserva no existente resulte en un error.
+}
+
+func testReservationPrice() {
+    // Asegura que el sistema calcula los precios de forma consistente. Por ejemplo: si hago dos reservas con los mismos parámetros excepto el nombre de los clientes, me deberían dar el mismo precio.
+}
 
 // Pruebas para eliminar
 
@@ -92,14 +111,17 @@ Goku.name
 Goku.age
 Goku.height
 let Vegeta = Client(name: "Vegeta", age: 48, height: 1.80)
-var people: [Any] = []
+var people: [Client] = []
 people.append(Goku)
 people.append(Vegeta)
 people
 
 //let TeamHuman = Reservation(clientList: id: 0, hotelName: "Konoha", ["Goku","Vegetta","Piccolo"], stayInDays: 5, price: 25.50, breakfast: true)
-let TeamHuman2 = Reservation(id: 1, hotelName: "Konoha", clientList: [Goku, Vegeta], stayInDays: 5, price: 5.25, breakfast: true)
-TeamHuman2
+//let TeamHuman2 = Reservation(id: 1, hotelName: "Konoha", clientList: [Goku, Vegeta], stayInDays: 5, price: 5.25, breakfast: true)
+//TeamHuman2
+let TeamHuman3 = Reservation(clientList: people, stayInDays: 5, price: 0, breakfast: true)
 
-HotelReservationManager().addReservation(clients: [Goku, Vegeta], days:5, breakfastOption:true)
+HotelReservationManager().addReservation(Reservation: TeamHuman3)
 HotelReservationManager().printListOfReservations()
+
+
