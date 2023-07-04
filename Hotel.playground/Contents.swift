@@ -7,6 +7,9 @@
  (errores de la reserva).
  */
 
+// FIXME: Si no es necesario, eliminar este Foundation
+import Foundation
+
 // Estructura Cliente
 
 struct Client: Equatable, Hashable {
@@ -46,10 +49,13 @@ enum ReservationError: Error {
 // ------------------------------
 
 class HotelReservationManager {
+    var selection = 0
     
     func runHotelApliccation () {
         while true {
            // TODO:
+        
+            readUserChoice()
         }
     }
     
@@ -63,6 +69,24 @@ class HotelReservationManager {
     
 
     }
+
+    func readUserChoice() {
+    
+        var selection = 0
+        
+        while selection == 0 {
+            print("Para realizar una función escriba su número correspondiente:")
+            print("1 -> Añadir una reserva")
+            print("2 -> Candelar una reserva")
+            print("3 -> Imprimir la lista de reservas")
+            print("4 -> Cerrar la aplicación")
+            
+            var selection = readLine()
+            if selection == "4" {
+                break
+            }
+        }
+}
     
     func addReservation() {
         
@@ -85,8 +109,11 @@ class HotelReservationManager {
     func printListOfReservations () {
         
     }
-}
 
+
+
+let HotelAplication = HotelReservationManager()
+HotelAplication.runHotelApliccation()
 // Pruebas para eliminar
 
 let Goku = Client(name: "Goku", age: 45, height: 1.95)
@@ -99,6 +126,6 @@ people.append(Goku)
 people.append(Vegeta)
 people
 
-let TeamHuman = Reservation(id: 0, hotelName: "Sky", clientList: ["Goku","Vegetta","Piccolo"], stayInDays: 5, price: 25.50, breakfast: true)
+let TeamHuman = Reservation(clientList: ["Goku","Vegetta","Piccolo"], stayInDays: 5, price: 25.50, breakfast: true)
 
 TeamHuman
