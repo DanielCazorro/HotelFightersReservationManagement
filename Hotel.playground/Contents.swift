@@ -21,11 +21,11 @@ struct Client: Equatable, Hashable {
 
 struct Reservation {
  
-    let id: Int
+    let id: Int = 0
     // The ID coud be a var that add 1 every time that one reservation is made
     // somthing like: var idNumber = 0 // and at the end of func addreservation
     // idNumber += 1
-    let hotelName: String
+    let hotelName: String = "Namek"
     let clientList: Array<Any>
     let stayInDays: Int
     let price: Double
@@ -35,13 +35,57 @@ struct Reservation {
 
 // Estructura Errores de la reserva
 
-enum ReservationError {
+enum ReservationError: Error {
+    
     case sameID
     case sameClient
     case noReservation
+    
 }
 
+// ------------------------------
 
+class HotelReservationManager {
+    
+    func runHotelApliccation () {
+        while true {
+           // TODO:
+        }
+    }
+    
+    // let hotelName = "Namek"
+    
+    var reservationList: [Any] = []
+    
+    // private var reservationList: Any = [String]().self
+    
+    // Añadir yo el nombre del hotel, incluso como propiedad privada
+    
+
+    }
+    
+    func addReservation() {
+        
+        // var addReservationList : [Any] = []
+        
+        
+        //clientList
+        //stayInDays
+        //breakfast
+        
+        // verificar que el ID es único y que no está en ninguna otra reserva (que goku no pueda hacer dos reservas)
+        
+        //cálculo de precioa
+    }
+    
+    func cancelReservation() {
+        
+    }
+    
+    func printListOfReservations () {
+        
+    }
+}
 
 // Pruebas para eliminar
 
