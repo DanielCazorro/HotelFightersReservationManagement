@@ -10,7 +10,6 @@
 // FIXME: Si no es necesario, eliminar este Foundation
 import Foundation
 
-var newID = 0
 // Estructura Cliente
 
 struct Client {
@@ -25,27 +24,13 @@ struct Client {
 
 struct Reservation {
     
-    var id: Int = newID
-    /**
-     The ID coud be a var that add 1 every time that one reservation is made
-     somthing like: var idNumber = 0 // and at the end of func addreservation
-     idNumber += 1
-     */
-    let hotelName: String = "Namek"
-    /**
-    Maybe we can set here the hotel name. If not, try to set it down, where we change id
-     */
+    var id: Int
+    let hotelName: String
     let clientList: [Client]
     let stayInDays: Int
     let price: Double
-    func priceTotal() -> Double {
-        return Double(clientList.count * 20 * stayInDays)
-
-    }
-    
     let breakfast: Bool
-    var breakfastPrice = 1
-    if breakfast == true {breakfasPrice = 1.25}
+
 }
 
 // Estructura Errores de la reserva
@@ -60,26 +45,31 @@ enum ReservationError: Error {
 
 // ------------------------------
 
+// FIXME: Check all var and let, because some of them should be private
+
+var reservationList: [Reservation] = []
+var idCounter = 0
+
 class HotelReservationManager {
     
-    var reservationList: [Any] = []
     
-    
-    func addReservation(reservationToAdd: Reservation) {
+    func addReservation(clientList: [Client], stayInDays: Int, breakfast: Bool) {
         
+        idCounter += 1
+        let hotelName = "Namek"
         
-        let basePrice = 20
-        var priceToAdd = reservationToAdd.clientList.count * basePrice * reservationToAdd.stayInDays
+        // Cálculo del precio total
+        let GeneralPrice = 20.0
+        var breakfastPrice: Double = 0.00
+        if breakfast == true {breakfastPrice = 1.25 } else {breakfastPrice = 1}
+        let finalPrice = Double(clientList.count) * GeneralPrice * Double(stayInDays) * breakfastPrice
         
+        let reservationToAdd = Reservation(id: idCounter, hotelName: hotelName, clientList: clientList, stayInDays: stayInDays, price: finalPrice, breakfast: breakfast)
         
         reservationList.append(reservationToAdd)
-        print(reservationList)
-        
-        newID += 1
         
         // verificar que el ID es único y que no está en ninguna otra reserva (que goku no pueda hacer dos reservas)
         
-        //cálculo de precioa
     }
     
     func cancelReservation(Reservation: Reservation) {
@@ -99,7 +89,7 @@ class HotelReservationManager {
 func testAddReservation() {
     // Verifica errores al añadir reservas duplicadas (por ID o si otro cliente ya está en alguna otra reserva) y que nuevas reservas sean añadidas correctamente.
     
-    assert(HotelReservationManager().reservationList.count == 0)
+   // assert(HotelReservationManager().reservationList.count == 0)
 }
 
 // Ejecutamos el test
@@ -130,12 +120,16 @@ Krillin.name
 Krillin.age
 Krillin.height
 
-let firstReservation = Reservation(clientList: [Goku], stayInDays: 1, price: 0, breakfast: true)
-firstReservation.id
-let secondReservation = Reservation(clientList: [Vegeta, Krillin], stayInDays: 1, price: 0, breakfast: false)
-secondReservation.id
-secondReservation.breakfast
-
-HotelReservationManager().reservationList
-HotelReservationManager().addReservation(reservationToAdd: firstReservation)
+HotelReservationManager().addReservation(clientList: [Goku, Vegeta], stayInDays: 5, breakfast: true)
+HotelReservationManager().addReservation(clientList: [Krillin], stayInDays: 10, breakfast: false)
 HotelReservationManager().printListOfReservations()
+//let firstReservation = Reservation(clientList: [Goku], stayInDays: 1, price: 0, breakfast: true)
+//firstReservation.id
+//let secondReservation = Reservation(clientList: [Vegeta, Krillin], stayInDays: 1, price: 0, breakfast: false)
+//secondReservation.id
+//secondReservation.breakfast
+
+//HotelReservationManager().reservationList
+//HotelReservationManager().addReservation(reservationToAdd: firstReservation)
+//HotelReservationManager().printListOfReservations()
+
