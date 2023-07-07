@@ -35,7 +35,6 @@ enum ReservationError: Error {
 
 // MARK: - Class -
 
-
 class HotelReservationManager {
     
     private var idCounter = 0
@@ -55,10 +54,10 @@ class HotelReservationManager {
         
         let reservationToAdd = Reservation(id: idCounter, hotelName: hotelName, clientList: clientList, stayInDays: stayInDays, price: finalPrice, breakfast: breakfast)
         
-        // verificar que el ID es único y que no está en ninguna otra reserva (que goku no pueda hacer dos reservas). Lanzar error si no es así
         /// Verificar que el ID es único
         for reservation in reservationList {
             if reservation.id == idCounter {
+                print("El ID de reserva debe ser único. Este ya está siendo utilizado.")
                 throw ReservationError.sameID
             }
         }
@@ -68,12 +67,12 @@ class HotelReservationManager {
             for client in reservation.clientList {
                 for nextClient in clientList {
                     if client.name == nextClient.name {
+                        print("El cliente ya se encuentra en otra reserva.")
                         throw ReservationError.sameClient
                     }
                 }
             }
         }
-        
         
         /// Añade la reserva al listado de reservas.
         reservationList.append(reservationToAdd)
@@ -83,27 +82,37 @@ class HotelReservationManager {
     }
     
     ///Crea un método para cancelar una reserva
-    func cancelReservation(Reservation: Reservation) throws {
+    func cancelReservation(reservationIdToRemove id: Int) throws {
         
-        reservationList.remove(at: Reservation.id)
+        guard let numberIndex = reservationList.firstIndex(where: {$0.id == id}) else {
+            throw ReservationError.noReservation
+        }
+
+        reservationList.remove(at: numberIndex)
         
     }
-    
     
     /// Crea un método (o propiedad de solo lectura) para obtener un listado de todas las reservas actuales
     func printListOfReservations () -> Array<Reservation> {
         
-        return hotelReservationManager.reservationList
-        //print("Reservation List:",reservationList)
+        return hotelManager.reservationList
+        
     }
     
 }
+
 // MARK: - Testing -
+
+let hotelManager = HotelReservationManager()
+
+let Goku = Client(name: "Goku", age: 42, height: 1.75)
+let Vegeta = Client(name: "Vegeta", age: 46, height: 1.64)
+let Krillin = Client(name: "Krillin", age: 42, height: 1.53)
 
 /// Verifica errores al añadir reservas duplicadas (por ID o si otro cliente ya está en alguna otra reserva) y que nuevas reservas sean añadidas correctamente.
 func testAddReservation() {
     
-     assert(Reservation1.id != Reservation2.id)
+    assert(Reservation1.id != Reservation2.id)
 
 }
 
@@ -123,32 +132,21 @@ func testReservationPrice() {
 
 // MARK: - Pruebas para eliminar -
 
-let Goku = Client(name: "Goku", age: 45, height: 1.95)
-Goku.name
-Goku.age
-Goku.height
-let Vegeta = Client(name: "Vegeta", age: 48, height: 1.80)
-Vegeta.name
-Vegeta.age
-Vegeta.height
-let Krillin = Client(name: "Krillin", age: 45, height: 1.65)
-Krillin.name
-Krillin.age
-Krillin.height
 
-let hotelReservationManager = HotelReservationManager()
+try hotelManager.addReservation(clientList: [Goku], stayInDays: 3, breakfast: true)
+try hotelManager.addReservation(clientList: [Vegeta], stayInDays: 3, breakfast: true)
+try hotelManager.addReservation(clientList: [Krillin], stayInDays: 4, breakfast: false)
 
-try hotelReservationManager.addReservation(clientList: [Goku], stayInDays: 3, breakfast: true)
-try hotelReservationManager.addReservation(clientList: [Vegeta], stayInDays: 3, breakfast: true)
-try hotelReservationManager.addReservation(clientList: [Krillin], stayInDays: 4, breakfast: false)
+let Reservation1 = hotelManager.reservationList[0]
+let Reservation2 = hotelManager.reservationList[1]
+let Reservation3 = hotelManager.reservationList[2]
+hotelManager.reservationList
 
-let Reservation1 = hotelReservationManager.reservationList[0]
-let Reservation2 = hotelReservationManager.reservationList[1]
-let Reservation3 = hotelReservationManager.reservationList[2]
-hotelReservationManager.reservationList
+try hotelManager.cancelReservation(reservationIdToRemove: 1)
+try hotelManager.cancelReservation(reservationIdToRemove: 3)
 
-try hotelReservationManager.cancelReservation(Reservation: Reservation1)
-hotelReservationManager.printListOfReservations()
+hotelManager.printListOfReservations()
+
 // MARK: - Test -
 
 testAddReservation()
