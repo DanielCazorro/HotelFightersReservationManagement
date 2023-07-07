@@ -1,8 +1,8 @@
-/**Gestión de Reservas de Hotel Luchadores
+/*Gestión de Reservas de Hotel Luchadores
  Descripción: Desarrolla un sistema para gestionar reservas de hotel para Goku y sus amigos.
 */
 
-/**
+/*
  Modela las estructuras: Client (cliente), Reservation (reserva) y ReservationError
  (errores de la reserva).
  */
@@ -10,7 +10,7 @@
 // FIXME: Si no es necesario, eliminar este Foundation
 import Foundation
 
-// Estructura Cliente
+/// Estructura Cliente
 
 struct Client {
     
@@ -20,7 +20,7 @@ struct Client {
     
 }
 
-// Estructura Reserva
+/// Estructura Reserva
 
 struct Reservation {
     
@@ -33,7 +33,7 @@ struct Reservation {
 
 }
 
-// Estructura Errores de la reserva
+/// Estructura Errores de la reserva
 
 enum ReservationError: Error {
     
@@ -43,7 +43,8 @@ enum ReservationError: Error {
     
 }
 
-// ------------------------------
+// MARK: - Class -
+
 
 // FIXME: Check all var and let, because some of them should be private
 
@@ -68,7 +69,7 @@ class HotelReservationManager {
         
         reservationList.append(reservationToAdd)
         
-        // verificar que el ID es único y que no está en ninguna otra reserva (que goku no pueda hacer dos reservas)
+        // verificar que el ID es único y que no está en ninguna otra reserva (que goku no pueda hacer dos reservas). Lanzar error si no es así
         
     }
     
@@ -86,21 +87,45 @@ class HotelReservationManager {
 
 // Testing
 
+//let Reservation1 = reservationList[0]
+//let Reservation2 = reservationList[1]
+
 func testAddReservation() {
-    // Verifica errores al añadir reservas duplicadas (por ID o si otro cliente ya está en alguna otra reserva) y que nuevas reservas sean añadidas correctamente.
+    /// Verifica errores al añadir reservas duplicadas (por ID o si otro cliente ya está en alguna otra reserva) y que nuevas reservas sean añadidas correctamente.
     
+    HotelReservationManager().addReservation(clientList: [Goku], stayInDays: 3, breakfast: true)
+    HotelReservationManager().addReservation(clientList: [Vegeta], stayInDays: 3, breakfast: true)
+    
+    let Reservation1 = reservationList[0]
+    let Reservation2 = reservationList[1]
+
+    assert(Reservation1.id != Reservation2.id)
+    
+    print(Reservation1.id)
+    print(Reservation2.id)
    // assert(HotelReservationManager().reservationList.count == 0)
 }
 
 // Ejecutamos el test
-testAddReservation()
+//testAddReservation()
 
 func testCancelReservation() {
     // Verifica que las reservas se cancelen correctamente (borrándose del listado) y que cancelar una reserva no existente resulte en un error.
 }
 
 func testReservationPrice() {
-    // Asegura que el sistema calcula los precios de forma consistente. Por ejemplo: si hago dos reservas con los mismos parámetros excepto el nombre de los clientes, me deberían dar el mismo precio.
+    /// Asegura que el sistema calcula los precios de forma consistente. Por ejemplo: si hago dos reservas con los mismos parámetros excepto el nombre de los clientes, me deberían dar el mismo precio.
+    
+    HotelReservationManager().addReservation(clientList: [Goku], stayInDays: 3, breakfast: true)
+    HotelReservationManager().addReservation(clientList: [Vegeta], stayInDays: 3, breakfast: true)
+    
+    let Reservation1 = reservationList[0]
+    let Reservation2 = reservationList[1]
+    
+    assert(Reservation1.price == Reservation2.price)
+    
+    print(Reservation1.price)
+    print(Reservation2.price)
 }
 
 
@@ -120,9 +145,14 @@ Krillin.name
 Krillin.age
 Krillin.height
 
-HotelReservationManager().addReservation(clientList: [Goku, Vegeta], stayInDays: 5, breakfast: true)
-HotelReservationManager().addReservation(clientList: [Krillin], stayInDays: 10, breakfast: false)
-HotelReservationManager().printListOfReservations()
+// MARK: - Test -
+
+testAddReservation()
+testReservationPrice()
+
+//HotelReservationManager().addReservation(clientList: [Goku, Vegeta], stayInDays: 5, breakfast: true)
+//HotelReservationManager().addReservation(clientList: [Krillin], stayInDays: 10, breakfast: false)
+//HotelReservationManager().printListOfReservations()
 //let firstReservation = Reservation(clientList: [Goku], stayInDays: 1, price: 0, breakfast: true)
 //firstReservation.id
 //let secondReservation = Reservation(clientList: [Vegeta, Krillin], stayInDays: 1, price: 0, breakfast: false)
@@ -132,4 +162,3 @@ HotelReservationManager().printListOfReservations()
 //HotelReservationManager().reservationList
 //HotelReservationManager().addReservation(reservationToAdd: firstReservation)
 //HotelReservationManager().printListOfReservations()
-
