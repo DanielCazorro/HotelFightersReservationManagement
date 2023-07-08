@@ -6,7 +6,6 @@
 
 // Modela las estructuras: Client (cliente), Reservation (reserva) y ReservationError (errores de la reserva).
 
-// FIXME: Si no es necesario, eliminar este Foundation
 import Foundation
 
 /// Estructura Cliente
@@ -109,22 +108,39 @@ let Goku = Client(name: "Goku", age: 42, height: 1.75)
 let Vegeta = Client(name: "Vegeta", age: 46, height: 1.64)
 let Krillin = Client(name: "Krillin", age: 42, height: 1.53)
 
+try hotelManager.addReservation(clientList: [Goku], stayInDays: 3, breakfast: true)
+try hotelManager.addReservation(clientList: [Vegeta], stayInDays: 3, breakfast: true)
+try hotelManager.addReservation(clientList: [Krillin], stayInDays: 4, breakfast: false)
+
+let Reservation1 = hotelManager.reservationList[0]
+let Reservation2 = hotelManager.reservationList[1]
+let Reservation3 = hotelManager.reservationList[2]
+
 /// Verifica errores al añadir reservas duplicadas (por ID o si otro cliente ya está en alguna otra reserva) y que nuevas reservas sean añadidas correctamente.
 func testAddReservation() {
     
+    assert(Reservation1.id == 1)
     assert(Reservation1.id != Reservation2.id)
+    assert(Reservation2.id != Reservation3.id)
+    assert(Reservation3.id == 3)
 
 }
+
+
+try hotelManager.cancelReservation(reservationIdToRemove: 3)
 
 /// Verifica que las reservas se cancelen correctamente (borrándose del listado) y que cancelar una reserva no existente resulte en un error.
 func testCancelReservation() {
 
+    assert(hotelManager.reservationList.count == 2)
+    hotelManager.printListOfReservations()
 }
+
 
 /// Asegura que el sistema calcula los precios de forma consistente. Por ejemplo: si hago dos reservas con los mismos parámetros excepto el nombre de los clientes, me deberían dar el mismo precio.
 func testReservationPrice() {
     
-    //assert(Reservation1.price == Reservation2.price)
+    assert(Reservation1.price == Reservation2.price)
     //assert(Reservation1.price != Reservation3.price)
     
 }
@@ -133,21 +149,8 @@ func testReservationPrice() {
 // MARK: - Pruebas para eliminar -
 
 
-try hotelManager.addReservation(clientList: [Goku], stayInDays: 3, breakfast: true)
-try hotelManager.addReservation(clientList: [Vegeta], stayInDays: 3, breakfast: true)
-try hotelManager.addReservation(clientList: [Krillin], stayInDays: 4, breakfast: false)
-
-let Reservation1 = hotelManager.reservationList[0]
-let Reservation2 = hotelManager.reservationList[1]
-let Reservation3 = hotelManager.reservationList[2]
-hotelManager.reservationList
-
-try hotelManager.cancelReservation(reservationIdToRemove: 1)
-try hotelManager.cancelReservation(reservationIdToRemove: 3)
-
-hotelManager.printListOfReservations()
-
 // MARK: - Test -
 
 testAddReservation()
+testCancelReservation()
 testReservationPrice()
