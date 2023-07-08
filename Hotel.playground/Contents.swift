@@ -107,22 +107,33 @@ let hotelManager = HotelReservationManager()
 let Goku = Client(name: "Goku", age: 42, height: 1.75)
 let Vegeta = Client(name: "Vegeta", age: 46, height: 1.64)
 let Krillin = Client(name: "Krillin", age: 42, height: 1.53)
+let Frieza = Client(name: "Frieza", age: 43, height: 1.58)
+let Gohan = Client(name: "Gohan", age: 27, height: 1.76)
 
-try hotelManager.addReservation(clientList: [Goku], stayInDays: 3, breakfast: true)
-try hotelManager.addReservation(clientList: [Vegeta], stayInDays: 3, breakfast: true)
-try hotelManager.addReservation(clientList: [Krillin], stayInDays: 4, breakfast: false)
+let Reservation1 = try hotelManager.addReservation(clientList: [Goku], stayInDays: 3, breakfast: true)
+let Reservation2 = try hotelManager.addReservation(clientList: [Vegeta], stayInDays: 3, breakfast: true)
+let Reservation3 = try hotelManager.addReservation(clientList: [Krillin], stayInDays: 4, breakfast: false)
+let Reservation4 = try hotelManager.addReservation(clientList: [Frieza, Gohan], stayInDays: 2, breakfast: false)
 
-let Reservation1 = hotelManager.reservationList[0]
-let Reservation2 = hotelManager.reservationList[1]
-let Reservation3 = hotelManager.reservationList[2]
+
+//let Reservation1 = hotelManager.reservationList[0]
+//let Reservation2 = hotelManager.reservationList[1]
+//let Reservation3 = hotelManager.reservationList[2]
 
 /// Verifica errores al añadir reservas duplicadas (por ID o si otro cliente ya está en alguna otra reserva) y que nuevas reservas sean añadidas correctamente.
 func testAddReservation() {
+    
     
     assert(Reservation1.id == 1)
     assert(Reservation1.id != Reservation2.id)
     assert(Reservation2.id != Reservation3.id)
     assert(Reservation3.id == 3)
+    
+    do {
+        let ReservationFail1 = try hotelManager.addReservation(clientList: [Goku], stayInDays: 1, breakfast: false)
+    } catch {
+        print(ReservationError.sameClient)
+    }
 
 }
 
@@ -131,11 +142,9 @@ try hotelManager.cancelReservation(reservationIdToRemove: 3)
 
 /// Verifica que las reservas se cancelen correctamente (borrándose del listado) y que cancelar una reserva no existente resulte en un error.
 func testCancelReservation() {
-
-    assert(hotelManager.reservationList.count == 2)
-    hotelManager.printListOfReservations()
+    
+    assert(hotelManager.reservationList.count == 3)
 }
-
 
 /// Asegura que el sistema calcula los precios de forma consistente. Por ejemplo: si hago dos reservas con los mismos parámetros excepto el nombre de los clientes, me deberían dar el mismo precio.
 func testReservationPrice() {
@@ -154,3 +163,5 @@ func testReservationPrice() {
 testAddReservation()
 testCancelReservation()
 testReservationPrice()
+
+hotelManager.printListOfReservations()
