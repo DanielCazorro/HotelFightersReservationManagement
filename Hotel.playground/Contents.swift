@@ -84,6 +84,7 @@ class HotelReservationManager {
     func cancelReservation(reservationIdToRemove id: Int) throws {
         
         guard let numberIndex = reservationList.firstIndex(where: {$0.id == id}) else {
+            print("No es posible cancelar la reserva, ya que no existe en la base de datos.")
             throw ReservationError.noReservation
         }
 
@@ -116,12 +117,9 @@ let Reservation3 = try hotelManager.addReservation(clientList: [Krillin], stayIn
 let Reservation4 = try hotelManager.addReservation(clientList: [Frieza, Gohan], stayInDays: 2, breakfast: false)
 
 
-//let Reservation1 = hotelManager.reservationList[0]
-//let Reservation2 = hotelManager.reservationList[1]
-//let Reservation3 = hotelManager.reservationList[2]
-
 /// Verifica errores al añadir reservas duplicadas (por ID o si otro cliente ya está en alguna otra reserva) y que nuevas reservas sean añadidas correctamente.
 func testAddReservation() {
+    
     
     
     assert(Reservation1.id == 1)
@@ -144,13 +142,19 @@ try hotelManager.cancelReservation(reservationIdToRemove: 3)
 func testCancelReservation() {
     
     assert(hotelManager.reservationList.count == 3)
+    
+    do {
+        let ReservationFail2 = try hotelManager.cancelReservation(reservationIdToRemove: 3)
+    } catch {
+        print(ReservationError.noReservation)
+    }
 }
 
 /// Asegura que el sistema calcula los precios de forma consistente. Por ejemplo: si hago dos reservas con los mismos parámetros excepto el nombre de los clientes, me deberían dar el mismo precio.
 func testReservationPrice() {
     
     assert(Reservation1.price == Reservation2.price)
-    //assert(Reservation1.price != Reservation3.price)
+    assert(Reservation1.price != Reservation4.price)
     
 }
 
