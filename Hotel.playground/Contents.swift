@@ -36,6 +36,7 @@ enum ReservationError: Error {
 
 class HotelReservationManager {
     
+    // Contador de ID para asegurar identificadores únicos
     private var idCounter = 0
     let hotelName = "Namek"
     private(set) var reservationList: [Reservation] = []
@@ -43,20 +44,22 @@ class HotelReservationManager {
     /// Crea método para añadir una reserva
     func addReservation(clientList: [Client], stayInDays: Int, breakfast: Bool) throws -> Reservation {
         
+        // Incrementa el contador de identificación
         idCounter += 1
         
         /// Cálculo del precio total
         let GeneralPrice = 20.0
-        var breakfastPrice: Double = 0.00
-        if breakfast == true {breakfastPrice = 1.25 } else {breakfastPrice = 1}
+        let breakfastPrice: Double = breakfast ? 1.25 : 1
+        
         let finalPrice = Double(clientList.count) * GeneralPrice * Double(stayInDays) * breakfastPrice
         
+        // Crea la reserva
         let reservationToAdd = Reservation(id: idCounter, hotelName: hotelName, clientList: clientList, stayInDays: stayInDays, price: finalPrice, breakfast: breakfast)
         
         /// Verificar que el ID es único
         for reservation in reservationList {
             if reservation.id == idCounter {
-                print("El ID de reserva debe ser único. Este ya está siendo utilizado.")
+                print("El ID de reserva \(idCounter) ya está siendo utilizado.")
                 throw ReservationError.sameID
             }
         }
@@ -66,7 +69,7 @@ class HotelReservationManager {
             for client in reservation.clientList {
                 for nextClient in clientList {
                     if client.name == nextClient.name {
-                        print("El cliente ya se encuentra en otra reserva.")
+                        print("El cliente \(client.name) ya se encuentra en otra reserva.")
                         throw ReservationError.sameClient
                     }
                 }
@@ -83,22 +86,22 @@ class HotelReservationManager {
     ///Crea un método para cancelar una reserva
     func cancelReservation(reservationIdToRemove id: Int) throws {
         
+        // Busca la reserva con el ID especificado
         guard let numberIndex = reservationList.firstIndex(where: {$0.id == id}) else {
             print("No es posible cancelar la reserva, ya que no existe en la base de datos.")
             throw ReservationError.noReservation
         }
-
+        // Remueve la reserva del listado
         reservationList.remove(at: numberIndex)
-        
     }
     
     /// Crea un método (o propiedad de solo lectura) para obtener un listado de todas las reservas actuales
     func printListOfReservations () -> Array<Reservation> {
         
+        // Devuelve la lista de reservas
         return hotelManager.reservationList
         
     }
-    
 }
 
 // MARK: - Testing -
@@ -120,8 +123,6 @@ let Reservation4 = try hotelManager.addReservation(clientList: [Frieza, Gohan], 
 /// Verifica errores al añadir reservas duplicadas (por ID o si otro cliente ya está en alguna otra reserva) y que nuevas reservas sean añadidas correctamente.
 func testAddReservation() {
     
-    
-    
     assert(Reservation1.id == 1)
     assert(Reservation1.id != Reservation2.id)
     assert(Reservation2.id != Reservation3.id)
@@ -132,7 +133,6 @@ func testAddReservation() {
     } catch {
         print(ReservationError.sameClient)
     }
-
 }
 
 
@@ -144,7 +144,7 @@ func testCancelReservation() {
     assert(hotelManager.reservationList.count == 3)
     
     do {
-        let ReservationFail2 = try hotelManager.cancelReservation(reservationIdToRemove: 3)
+        let ReservationFail2: () = try hotelManager.cancelReservation(reservationIdToRemove: 3)
     } catch {
         print(ReservationError.noReservation)
     }
@@ -153,14 +153,28 @@ func testCancelReservation() {
 /// Asegura que el sistema calcula los precios de forma consistente. Por ejemplo: si hago dos reservas con los mismos parámetros excepto el nombre de los clientes, me deberían dar el mismo precio.
 func testReservationPrice() {
     
+    // Verifica que las reservas 1 y 2 tengan el mismo precio
     assert(Reservation1.price == Reservation2.price)
+    
+    // Verifica que las reservas 1 y 4 tengan precios diferentes
     assert(Reservation1.price != Reservation4.price)
     
+    // Verifica que las reservas 2 y 4 tengan precios diferentes
+    assert(Reservation2.price != Reservation4.price)
+    
+    // Intenta agregar una reserva adicional con los mismos parámetros, excepto el cliente Goku
+    do {
+        let Reservation5 = try hotelManager.addReservation(clientList: [Vegeta], stayInDays: 3, breakfast: true)
+        // Verifica que la nueva reserva tenga el mismo precio que la reserva 1
+        assert(Reservation1.price == Reservation5.price)
+    } catch ReservationError.sameClient {
+        // Debería fallar ya que Goku ya está en la reserva 1
+        print("Error al agregar Reservation5: El cliente ya está en otra reserva.")
+    } catch {
+        assertionFailure("Se esperaba un error de cliente duplicado")
+    }
+    
 }
-
-
-// MARK: - Pruebas para eliminar -
-
 
 // MARK: - Test -
 
